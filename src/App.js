@@ -6,11 +6,13 @@ import Navbar from './components/DefaultLayout/Navbar';
 import { Routes, Route } from 'react-router-dom';
 import { publicRoutes } from './router/routes';
 import DefaultLayout from './components/DefaultLayout/DefaultLayout';
+import { ToastContainer } from 'react-toastify';
 import { Fragment } from 'react';
 // import { Routers } from 'react-router-dom';
 function App() {
     return (
         <>
+            <ToastContainer />
             <Routes>
                 {publicRoutes.map((route, index) => {
                     // Khong co layout => default layout
