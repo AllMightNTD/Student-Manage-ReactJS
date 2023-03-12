@@ -1,7 +1,12 @@
 import { Space, Switch, Table, Button } from 'antd';
 import { Checkbox } from 'antd';
+import { useContext, useEffect, useState } from 'react';
+import DataContext from './DataContext';
 import Search from './Search';
+import CircularJSON from 'circular-json';
 const TableList = () => {
+    const { datastudent } = useContext(DataContext);
+    console.log(datastudent);
     const columns = [
         {
             title: 'Check',
@@ -50,41 +55,52 @@ const TableList = () => {
     const handleDelete = (code) => {
         console.log(`Button clicked for row with code ${code}`);
     };
-    const data = [];
-    for (let i = 0; i < 100; i++) {
-        data.push({
-            key: i,
-            code: '1512665',
-            check: <Checkbox />,
-            name: `Edward King ${i}`,
-            name: 'Nguyễn Tiến Dũng',
-            gender: 'Nam',
-            nameDepartment: 'Công nghệ thông tin',
-            codeDepartment: 'CNTT',
-            address: `London, Park Lane no. ${i}`,
-            actions: (
-                <div className="flex gap-5">
-                    <button
-                        onClick={() => handleFix(data[i].code)}
-                        className="bg-emerald-400 text-white px-2 rounded-md"
-                    >
-                        Sửa
-                    </button>
-                    <button
-                        onClick={() => handleDelete(data[i].code)}
-                        className="bg-rose-600 text-white px-2 rounded-md"
-                    >
-                        Xóa
-                    </button>
-                </div>
-            ),
-        });
-    }
-
+    const [data, setData] = useState(() => {
+        const localData = JSON.parse(localStorage.getItem('dataStudent'));
+        return localData || [];
+    });
+    useEffect(() => {
+        if (datastudent) {
+            setData((prevData) => [
+                ...prevData,
+                {
+                    key: prevData.length,
+                    code: datastudent.code,
+                    check: <Checkbox />,
+                    name: datastudent.name,
+                    gender: datastudent.Gender,
+                    nameDepartment: datastudent.nameDepartment,
+                    codeDepartment: datastudent.codeDepartment,
+                    address: `London, Park Lane no.`,
+                    actions: (
+                        <div className="flex gap-5">
+                            <button
+                                onClick={() => handleFix(datastudent.code)}
+                                className="bg-emerald-400 text-white px-2 rounded-md"
+                            >
+                                Sửa
+                            </button>
+                            <button
+                                onClick={() => handleDelete(datastudent.code)}
+                                className="bg-rose-600 text-white px-2 rounded-md"
+                            >
+                                Xóa
+                            </button>
+                        </div>
+                    ),
+                },
+            ]);
+            // for (let i = 0; i < 100; i++) {
+        }
+    }, [datastudent]);
+    useEffect(() => {
+        localStorage.setItem('dataStudent', CircularJSON.stringify(data));
+    }, [data]);
     console.log(data);
+
     return (
         <div>
-            <Search/>
+            <Search />
             <Table
                 columns={columns}
                 dataSource={data}

@@ -7,9 +7,16 @@ import { Routes, Route } from 'react-router-dom';
 import { publicRoutes } from './router/routes';
 import DefaultLayout from './components/DefaultLayout/DefaultLayout';
 import { ToastContainer } from 'react-toastify';
-import { Fragment } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 // import { Routers } from 'react-router-dom';
+import DataContext from './components/DataContext';
 function App() {
+    const [datastudent, setData] = useState(null);
+    const setDataFromChild = (childData) => {
+        setData(childData);
+    };
+    const contextValue = { datastudent, setDataFromChild };
+    console.log(contextValue);
     return (
         <>
             <ToastContainer />
@@ -31,9 +38,11 @@ function App() {
                             key={index}
                             path={route.path}
                             element={
-                                <Layout>
-                                    <Page />
-                                </Layout>
+                                <DataContext.Provider value={contextValue}>
+                                    <Layout>
+                                        <Page />
+                                    </Layout>
+                                </DataContext.Provider>
                             }
                         ></Route>
                     );

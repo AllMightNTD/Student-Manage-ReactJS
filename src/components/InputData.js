@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, Input } from 'antd';
 import { Radio } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import validation from '../actions/validate';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import DataContext from './DataContext';
 const InputData = () => {
+    const { setDataFromChild } = useContext(DataContext);
     const [value, setValue] = useState({
         code: '',
         name: '',
@@ -19,6 +21,7 @@ const InputData = () => {
         e.preventDefault();
         const validationErrors = validation(value);
         if (Object.keys(validationErrors).length === 0) {
+            setDataFromChild(value);
             toast.success('Add Student Success !', {
                 autoClose: 1000,
                 onClose: () => {
